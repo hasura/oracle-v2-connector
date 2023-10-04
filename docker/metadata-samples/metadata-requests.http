@@ -1,0 +1,587 @@
+### CLEAR METADATA
+POST http://localhost:8082/v1/metadata
+
+// language=JSON
+{
+  "type": "clear_metadata",
+  "args": {}
+}
+
+### RELOAD METADATA
+POST http://localhost:8082/v1/metadata
+
+// language=JSON
+{
+  "type": "reload_metadata",
+  "args": {}
+}
+
+### POSTGRES
+POST http://localhost:8082/v1/metadata
+
+// language=JSON
+{
+  "type": "replace_metadata",
+  "args": {
+    "metadata": {
+      "version": 3,
+      "backend_configs": {
+        "dataconnector": {
+          "postgres_gdc": {
+            "uri": "http://host.docker.internal:8081/api/v1/postgres"
+          }
+        }
+      },
+      "sources": [
+        {
+          "name": "chinook",
+          "kind": "postgres_gdc",
+          "configuration": {
+            "jdbc_url": "jdbc:postgresql://localhost:5432/postgres?user=postgres&password=Password123"
+          },
+          "tables": [
+            {
+              "table": [
+                "public",
+                "Album"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Album",
+                  "select_by_pk": "Album_by_pk",
+                  "select_aggregate": "Album_aggregate",
+                  "insert": "insert_Album",
+                  "insert_one": "insert_Album_one",
+                  "update": "update_Album",
+                  "update_by_pk": "update_Album_by_pk",
+                  "delete": "delete_Album",
+                  "delete_by_pk": "delete_Album_by_pk"
+                }
+              },
+              "object_relationships": [
+                {
+                  "name": "Artist",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Artist"
+                      ],
+                      "column_mapping": {
+                        "ArtistId": "ArtistId"
+                      }
+                    }
+                  }
+                }
+              ],
+              "array_relationships": [
+                {
+                  "name": "Tracks",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Track"
+                      ],
+                      "column_mapping": {
+                        "AlbumId": "AlbumId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "Artist"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Artist",
+                  "select_by_pk": "Artist_by_pk",
+                  "select_aggregate": "Artist_aggregate",
+                  "insert": "insert_Artist",
+                  "insert_one": "insert_Artist_one",
+                  "update": "update_Artist",
+                  "update_by_pk": "update_Artist_by_pk",
+                  "delete": "delete_Artist",
+                  "delete_by_pk": "delete_Artist_by_pk"
+                }
+              },
+              "array_relationships": [
+                {
+                  "name": "Albums",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Album"
+                      ],
+                      "column_mapping": {
+                        "ArtistId": "ArtistId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "Customer"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Customer",
+                  "select_by_pk": "Customer_by_pk",
+                  "select_aggregate": "Customer_aggregate",
+                  "insert": "insert_Customer",
+                  "insert_one": "insert_Customer_one",
+                  "update": "update_Customer",
+                  "update_by_pk": "update_Customer_by_pk",
+                  "delete": "delete_Customer",
+                  "delete_by_pk": "delete_Customer_by_pk"
+                }
+              },
+              "object_relationships": [
+                {
+                  "name": "SupportRep",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Employee"
+                      ],
+                      "column_mapping": {
+                        "SupportRepId": "EmployeeId"
+                      }
+                    }
+                  }
+                }
+              ],
+              "array_relationships": [
+                {
+                  "name": "Invoices",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Invoice"
+                      ],
+                      "column_mapping": {
+                        "CustomerId": "CustomerId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "Employee"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Employee",
+                  "select_by_pk": "Employee_by_pk",
+                  "select_aggregate": "Employee_aggregate",
+                  "insert": "insert_Employee",
+                  "insert_one": "insert_Employee_one",
+                  "update": "update_Employee",
+                  "update_by_pk": "update_Employee_by_pk",
+                  "delete": "delete_Employee",
+                  "delete_by_pk": "delete_Employee_by_pk"
+                }
+              },
+              "object_relationships": [
+              ],
+              "array_relationships": [
+                {
+                  "name": "SupportRepForCustomers",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Customer"
+                      ],
+                      "column_mapping": {
+                        "EmployeeId": "SupportRepId"
+                      }
+                    }
+                  }
+                }
+              ],
+              "select_permissions": [
+                {
+                  "role": "user",
+                  "permission": {
+                    "columns": [
+                      "EmployeeId",
+                      "FirstName",
+                      "LastName"
+                    ],
+                    "filter": {
+                      "EmployeeId": {
+                        "_eq": "X-Hasura-User-Id"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "Genre"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Genre",
+                  "select_by_pk": "Genre_by_pk",
+                  "select_aggregate": "Genre_aggregate",
+                  "insert": "insert_Genre",
+                  "insert_one": "insert_Genre_one",
+                  "update": "update_Genre",
+                  "update_by_pk": "update_Genre_by_pk",
+                  "delete": "delete_Genre",
+                  "delete_by_pk": "delete_Genre_by_pk"
+                }
+              },
+              "array_relationships": [
+                {
+                  "name": "Tracks",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Track"
+                      ],
+                      "column_mapping": {
+                        "GenreId": "GenreId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "Invoice"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Invoice",
+                  "select_by_pk": "Invoice_by_pk",
+                  "select_aggregate": "Invoice_aggregate",
+                  "insert": "insert_Invoice",
+                  "insert_one": "insert_Invoice_one",
+                  "update": "update_Invoice",
+                  "update_by_pk": "update_Invoice_by_pk",
+                  "delete": "delete_Invoice",
+                  "delete_by_pk": "delete_Invoice_by_pk"
+                }
+              },
+              "object_relationships": [
+                {
+                  "name": "Customer",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Customer"
+                      ],
+                      "column_mapping": {
+                        "CustomerId": "CustomerId"
+                      }
+                    }
+                  }
+                }
+              ],
+              "array_relationships": [
+                {
+                  "name": "InvoiceLines",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "InvoiceLine"
+                      ],
+                      "column_mapping": {
+                        "InvoiceId": "InvoiceId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "InvoiceLine"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "InvoiceLine",
+                  "select_by_pk": "InvoiceLine_by_pk",
+                  "select_aggregate": "InvoiceLine_aggregate",
+                  "insert": "insert_InvoiceLine",
+                  "insert_one": "insert_InvoiceLine_one",
+                  "update": "update_InvoiceLine",
+                  "update_by_pk": "update_InvoiceLine_by_pk",
+                  "delete": "delete_InvoiceLine",
+                  "delete_by_pk": "delete_InvoiceLine_by_pk"
+                }
+              },
+              "object_relationships": [
+                {
+                  "name": "Invoice",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Invoice"
+                      ],
+                      "column_mapping": {
+                        "InvoiceId": "InvoiceId"
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "Track",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Track"
+                      ],
+                      "column_mapping": {
+                        "TrackId": "TrackId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "MediaType"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "MediaType",
+                  "select_by_pk": "MediaType_by_pk",
+                  "select_aggregate": "MediaType_aggregate",
+                  "insert": "insert_MediaType",
+                  "insert_one": "insert_MediaType_one",
+                  "update": "update_MediaType",
+                  "update_by_pk": "update_MediaType_by_pk",
+                  "delete": "delete_MediaType",
+                  "delete_by_pk": "delete_MediaType_by_pk"
+                }
+              },
+              "array_relationships": [
+                {
+                  "name": "Tracks",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Track"
+                      ],
+                      "column_mapping": {
+                        "MediaTypeId": "MediaTypeId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "Playlist"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Playlist",
+                  "select_by_pk": "Playlist_by_pk",
+                  "select_aggregate": "Playlist_aggregate",
+                  "insert": "insert_Playlist",
+                  "insert_one": "insert_Playlist_one",
+                  "update": "update_Playlist",
+                  "update_by_pk": "update_Playlist_by_pk",
+                  "delete": "delete_Playlist",
+                  "delete_by_pk": "delete_Playlist_by_pk"
+                }
+              },
+              "array_relationships": [
+                {
+                  "name": "PlaylistTracks",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "PlaylistTrack"
+                      ],
+                      "column_mapping": {
+                        "PlaylistId": "PlaylistId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "PlaylistTrack"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "PlaylistTrack",
+                  "select_by_pk": "PlaylistTrack_by_pk",
+                  "select_aggregate": "PlaylistTrack_aggregate",
+                  "insert": "insert_PlaylistTrack",
+                  "insert_one": "insert_PlaylistTrack_one",
+                  "update": "update_PlaylistTrack",
+                  "update_by_pk": "update_PlaylistTrack_by_pk",
+                  "delete": "delete_PlaylistTrack",
+                  "delete_by_pk": "delete_PlaylistTrack_by_pk"
+                }
+              },
+              "object_relationships": [
+                {
+                  "name": "Playlist",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Playlist"
+                      ],
+                      "column_mapping": {
+                        "PlaylistId": "PlaylistId"
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "Track",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Track"
+                      ],
+                      "column_mapping": {
+                        "TrackId": "TrackId"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "table": [
+                "public",
+                "Track"
+              ],
+              "configuration": {
+                "custom_root_fields": {
+                  "select": "Track",
+                  "select_by_pk": "Track_by_pk",
+                  "select_aggregate": "Track_aggregate",
+                  "insert": "insert_Track",
+                  "insert_one": "insert_Track_one",
+                  "update": "update_Track",
+                  "update_by_pk": "update_Track_by_pk",
+                  "delete": "delete_Track",
+                  "delete_by_pk": "delete_Track_by_pk"
+                }
+              },
+              "object_relationships": [
+                {
+                  "name": "Album",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Album"
+                      ],
+                      "column_mapping": {
+                        "AlbumId": "AlbumId"
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "MediaType",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "MediaType"
+                      ],
+                      "column_mapping": {
+                        "MediaTypeId": "MediaTypeId"
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "Genre",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "Genre"
+                      ],
+                      "column_mapping": {
+                        "GenreId": "GenreId"
+                      }
+                    }
+                  }
+                }
+              ],
+              "array_relationships": [
+                {
+                  "name": "InvoiceLines",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "InvoiceLine"
+                      ],
+                      "column_mapping": {
+                        "TrackId": "TrackId"
+                      }
+                    }
+                  }
+                },
+                {
+                  "name": "PlaylistTracks",
+                  "using": {
+                    "manual_configuration": {
+                      "remote_table": [
+                        "public",
+                        "PlaylistTrack"
+                      ],
+                      "column_mapping": {
+                        "TrackId": "TrackId"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+

@@ -1,0 +1,67 @@
+version: "3.7"
+
+services:
+    # OpenTracing
+    jaeger:
+        image: jaegertracing/all-in-one:1.37
+        restart: always
+        ports:
+            - 5775:5775/udp
+            - 6831:6831/udp
+            - 6832:6832/udp
+            - 5778:5778
+            - 16686:16686
+            - 14250:14250
+            - 14268:14268
+            - 14269:14269
+            - 4317:4317 # OTLP gRPC
+            - 4318:4318 # OTLP HTTP
+            - 9411:9411
+        environment:
+            COLLECTOR_OTLP_ENABLED: "true"
+            COLLECTOR_ZIPKIN_HOST_PORT: 9411
+
+    dc-superconnector-agent:
+        build:
+            context: ../
+            dockerfile: Dockerfile
+        ports:
+            - "8081:8081"
+
+    hasura:
+        image: hasura/graphql-engine:v2.34.0
+        restart: always
+        ports:
+            - "8082:8080"
+        environment:
+            HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:Password123#@postgres:5432/postgres
+            HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+            HASURA_GRAPHQL_DEV_MODE: "true"
+            HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+            HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
+
+    # JDBC url = jdbc:postgresql://postgres:5432/postgres?user=postgres&password=Password123
+    postgres:
+        build: ./multidb-chinook/.data/postgres
+        image: chinook_postgres
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: Password123
+        ports:
+            - "5432:5432"
+        volumes:
+            - chinook_postgres_volume:/var/lib/postgresql/data
+
+    # JDBC url = jdbc:oracle:thin:@//oracle:1521/XEPDB1?user=chinook&password=Password123
+    oracle:
+        image: gvenzl/oracle-xe:21.3.0-slim
+        restart: always
+        environment:
+            ORACLE_PASSWORD: Password123
+        ports:
+            - "1521:1521"
+        volumes:
+            - ./multidb-chinook/.data/oracle/chinook.sql:/container-entrypoint-initdb.d/chinook.sql
+
+volumes:
+    chinook_postgres_volume:

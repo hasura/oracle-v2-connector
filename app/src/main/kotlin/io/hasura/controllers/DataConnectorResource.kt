@@ -94,12 +94,28 @@ class DataConnectorResource {
     @Path("/schema")
     @WithSpan
     @Consumes(MediaType.APPLICATION_JSON)
-    fun getSchemaWithRequest(
+    fun getSchemaWithRequestPOST(
         @RestPath @SpanAttribute("datasourceName")
         datasourceName: String,
         @RestHeader("X-Hasura-DataConnector-Config") configHeader: ConfigHeader,
         @RestHeader("X-Hasura-DataConnector-SourceName") sourceName: String,
         schemaRequest: SchemaRequest?
+    ): Schema {
+        val config = processHeaders(datasourceName, configHeader)
+        val dataConnectorService = DataConnectors.select(NamedLiteral.of(datasourceName)).get()
+        return dataConnectorService.getSchema(sourceName, config, schemaRequest ?: SchemaRequest())
+    }
+
+    @GET
+    @Path("/schema")
+    @WithSpan
+    @Consumes(MediaType.APPLICATION_JSON)
+    fun getSchemaWithRequestGET(
+            @RestPath @SpanAttribute("datasourceName")
+            datasourceName: String,
+            @RestHeader("X-Hasura-DataConnector-Config") configHeader: ConfigHeader,
+            @RestHeader("X-Hasura-DataConnector-SourceName") sourceName: String,
+            schemaRequest: SchemaRequest?
     ): Schema {
         val config = processHeaders(datasourceName, configHeader)
         val dataConnectorService = DataConnectors.select(NamedLiteral.of(datasourceName)).get()

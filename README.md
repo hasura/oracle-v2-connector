@@ -8,6 +8,8 @@ This repository contains the source code to the Oracle Connector for Hasura Grap
 
 - JDK 17
 - Oracle Database 18c or later
+- jOOQ Edition License w/ Oracle Support (Express/Pro/Enterprise)
+  - Read more about setting up jOOQ in the following section: [jOOQ Configuration](#jooq-configuration)
 
 ### Building the Connector
 
@@ -46,6 +48,20 @@ Some common configuration variables are:
 - `hasura.agroal.connection_pool_configuration.max_lifetime`: The maximum lifetime of a connection in the connection pool. Defaults to `PT2H`.
 
 For a full list of configuration variables, see the [Quarkus Configuration Reference](https://quarkus.io/guides/all-config).
+
+### jOOQ Configuration
+
+The connector uses jOOQ to generate SQL queries from the DDN Query IR.
+For the Oracle connector, jOOQ requires a valid jOOQ Edition License with Oracle Support.
+
+Download your jOOQ edition from the archive:
+- https://www.jooq.org/download/versions/
+
+Then, run the `maven-install.(sh|bat)` script from the extracted jOOQ zip to deploy it to your local Maven repository (usually `~/.m2`).
+Take the contents of `~/.m2/repository/org/jooq` and copy it into `lib/m2repo/org/jooq` in this repository.
+
+Adjust the `jooqEdition` variable in `buildSrc/src/main/kotlin/GlobalVersions.kt` to match the edition you have downloaded.
+Don't forget to also adjust the version number to match the version you have downloaded.
 
 ### Connecting to the Connector
 

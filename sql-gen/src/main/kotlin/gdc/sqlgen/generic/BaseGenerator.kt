@@ -4,6 +4,7 @@ import gdc.ir.*
 import gdc.sqlgen.utils.IOperationRequestRelationGraph
 import gdc.sqlgen.utils.RelationshipEdge
 import org.jooq.Condition
+import org.jooq.Field
 import org.jooq.impl.DSL
 import org.jooq.impl.SQLDataType
 
@@ -104,6 +105,9 @@ sealed interface BaseGenerator {
                         ApplyBinaryComparisonOperator.GREATER_THAN -> column.gt(comparisonValue)
                         ApplyBinaryComparisonOperator.GREATER_THAN_OR_EQUAL -> column.ge(comparisonValue)
                         ApplyBinaryComparisonOperator.CONTAINS -> column.contains(comparisonValue)
+                        ApplyBinaryComparisonOperator.LIKE -> column.like(comparisonValue as Field<String>)
+                        ApplyBinaryComparisonOperator.LIKE_IGNORE_CASE -> column.likeIgnoreCase(comparisonValue as Field<String>)
+                        ApplyBinaryComparisonOperator.LIKE_REGEX -> column.likeRegex(comparisonValue as Field<String>)
                     }
                 }
                 mkCondition(e, baseCond, relationGraph)

@@ -66,7 +66,10 @@ val JDBC_DATASOURCE_COMMON_CAPABILITY_RESPONSE = CapabilitiesResponse(
             ),
             ScalarType.STRING to ScalarTypeCapabilities(
                 comparison_operators = mapOf(
-                    ApplyBinaryComparisonOperator.CONTAINS to ScalarType.STRING
+                    ApplyBinaryComparisonOperator.CONTAINS to ScalarType.STRING,
+                    ApplyBinaryComparisonOperator.LIKE to ScalarType.STRING,
+                    ApplyBinaryComparisonOperator.LIKE_IGNORE_CASE to ScalarType.STRING,
+                    ApplyBinaryComparisonOperator.LIKE_REGEX to ScalarType.STRING
                 ),
                 aggregate_functions = mapOf(
                     SingleColumnAggregateFunction.MIN to ScalarType.STRING,

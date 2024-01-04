@@ -397,8 +397,17 @@ enum class ApplyBinaryComparisonOperator {
     @JsonProperty("less_than_or_equal")
     LESS_THAN_OR_EQUAL,
 
-    @JsonProperty("contains")
-    CONTAINS
+    @JsonProperty("_contains")
+    CONTAINS,
+
+    @JsonProperty("_like")
+    LIKE,
+
+    @JsonProperty("_ilike")
+    LIKE_IGNORE_CASE,
+
+    @JsonProperty("_regex")
+    LIKE_REGEX
 }
 
 enum class ApplyUnaryComparisonOperator {
